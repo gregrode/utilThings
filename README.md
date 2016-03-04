@@ -6,7 +6,7 @@ Consider you have the following class and the appropriate getters and setters:
 class Person{
   String name;
   int age;
-  List<String> IllegalArgumentException;
+  List<String> possession;
 }
 
 void populatePossessions(Person person){
