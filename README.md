@@ -1,7 +1,8 @@
 # verifyThings
 Verify objects in Java
 
-Consider you have the following class and the appropriate getters and setters
+Consider you have the following class and the appropriate getters and setters:
+```java
 class Person{
   String name;
   int age;
@@ -21,6 +22,7 @@ void populatePossessions(Person person){
   
   Things.verify(possession, "Person have socks but no shoes", p -> !p.contains("shoes"));
 }
+```
 
 
 
