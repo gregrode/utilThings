@@ -12,7 +12,7 @@ class Person{
 
 void test(Person person){
   // if person is null, a NullPointException is thrown
-  Things.verify(person, "person can't be null");
+  Things.verify(person);
   
   // if the list of possession is null or if the predicate fails the test (the list is empty), 
   // then the given runtimeException will be thrown
