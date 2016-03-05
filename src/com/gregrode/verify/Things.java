@@ -35,7 +35,7 @@ public final class Things
 
 	/**
 	 * Check whether the given object is null or not. if null, an
-	 * <code>ErrorStatusException</code> is thrown.
+	 * {@link NullPointerException} is thrown.
 	 * 
 	 * @param obj
 	 *            the object to check
@@ -49,8 +49,9 @@ public final class Things
 	}
 
 	/**
-	 * Check whether the given object is valid based on the given predicate. if
-	 * the predicate fails, an <code>ErrorStatusException</code> is thrown.
+	 * Check whether the given object is null or valid based on the given
+	 * predicate. if the predicate fails, an {@link NullPointerException} is
+	 * thrown.
 	 * 
 	 * @param obj
 	 *            the object to check
@@ -64,8 +65,9 @@ public final class Things
 	}
 
 	/**
-	 * Check whether the given object is valid based on the given predicate. if
-	 * the predicate fails, an <code>ErrorStatusException</code> is thrown.
+	 * Check whether the given object is null or valid based on the given
+	 * predicate. if the predicate fails, a {@link NullPointerException} is
+	 * thrown.
 	 * 
 	 * @param obj
 	 *            the object to check
