@@ -7,9 +7,10 @@ class Person{
   String name;
   int age;
   List<String> possession;
+  boolean evil;
 }
 
-void populatePossessions(Person person){
+void test(Person person){
   // if person is null, a NullPointException is thrown
   Things.verify(person, "person can't be null");
   
@@ -21,6 +22,12 @@ void populatePossessions(Person person){
   possession.add("socks");
   
   Things.verify(possession, "Person have socks but no shoes", p -> !p.contains("shoes"));
+  
+  Person evilPerson = Things.verify(person, Person::isEvil);
+  
+  boolean canPilfer = Things(evilPerson.getAge() > 18 && "TakeAllMyStuff".equals(evilPerson.getName()) && possession.contains("million dollar"), "This is not the right person");
+  
+  
 }
 ```
 
