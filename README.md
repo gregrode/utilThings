@@ -1,5 +1,5 @@
-# verifyThings
-Verify objects in Java
+# utilThings
+Utility classes to create and verify some of your favorite Java objects.
 
 Consider you have the following class and the appropriate getters and setters:
 ```java

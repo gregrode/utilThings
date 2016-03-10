@@ -1,0 +1,32 @@
+<ivy-module version="2.0">
+	<info organisation="com.agendahound" module="agendahound-ivy" />
+
+	<configurations defaultconfmapping="default">
+        <conf name="default" visibility="public"/>          
+    </configurations>
+
+
+	<dependencies defaultconf="default" >
+	    		    
+		<!-- ========== Testing ========================================== -->
+		<dependency org="junit" name="junit" rev="4.11" />
+		<dependency org="org.hamcrest" name="hamcrest-core" rev="1.3"/>
+		
+
+		<!-- ========== Logging ========================================== -->
+		<dependency org="org.slf4j" name="slf4j-api" rev="1.7.7" />
+		<dependency org="org.slf4j" name="jcl-over-slf4j" rev="1.7.7" />
+	    <dependency org="log4j" name="log4j" rev="1.2.17" conf="default" />
+
+
+		<!-- ========== JSON Library ===================== -->
+		<dependency org="com.fasterxml.jackson.core" name="jackson-databind" rev="2.4.2" transitive="false"/>
+		<dependency org="com.fasterxml.jackson.core" name="jackson-annotations" rev="2.4.2" />
+		<dependency org="com.fasterxml.jackson.core" name="jackson-core" rev="2.4.2" />
+
+				
+		<!-- ============= Provide Getter and Setter Annotations ======================= -->
+		<dependency org="org.projectlombok" name="lombok" rev="1.16.6" />
+		
+	</dependencies>
+</ivy-module>
