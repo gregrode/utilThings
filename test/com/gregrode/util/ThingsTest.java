@@ -42,7 +42,7 @@ public final class ThingsTest
 		Assert.assertEquals("apple", map3.get("1"));
 
 		Map<Color, Integer> map4 = Things.toMap(Color.class, Color::hashCode);
-		Assert.assertEquals("RED", map4.get(Color.RED));
+		Assert.assertTrue(map4.containsKey(Color.RED));
 	}
 
 	enum Color

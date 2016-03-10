@@ -205,7 +205,7 @@ public final class Things
 	 * @return Map
 	 */
 	@SafeVarargs
-	public static <K, V> Map<K, V> toMap(Supplier<Map<K, V>> mapSupplier, Entry<K, V>... entries)
+	public static <K, V, M extends Map<K, V>> Map<K, V> toMap(Supplier<M> mapSupplier, Entry<K, V>... entries)
 	{
 		return Stream.of(verify(entries, "Entries not specified")).collect(
 		        Collectors.toMap(Entry::getKey, Entry::getValue, (m, m2) -> m, verify(mapSupplier, "Implementation of Map was not specified. ")));
@@ -232,7 +232,7 @@ public final class Things
 	 * @return Map
 	 */
 	@SuppressWarnings("unchecked")
-	public static <K, V> Map<K, V> toMap(Supplier<Map<K, V>> mapSupplier, String json)
+	public static <K, V, M extends Map<K, V>> Map<K, V> toMap(Supplier<M> mapSupplier, String json)
 	{
 		try
 		{
