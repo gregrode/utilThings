@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Consumer;
@@ -32,6 +33,137 @@ public final class Things
 
 	private Things()
 	{
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	@SafeVarargs
+	public static <T> boolean isEmpty(final T... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final boolean... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final byte... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final short... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final int... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final double... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final float... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final long... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final char... array)
+	{
+		return ((array == null) || (array.length == 0));
+	}
+
+	/**
+	 * Checks if the given collection object is empty
+	 *
+	 * @param collection
+	 *            the collection object
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final Collection<?> collection)
+	{
+		return ((collection == null) || collection.isEmpty());
+	}
+
+	/**
+	 * checks if the given map is empty
+	 *
+	 * @return boolean
+	 */
+	public static boolean isEmpty(final Map<?, ?> map)
+	{
+		return ((map == null) || map.isEmpty());
 	}
 
 	/**
@@ -430,14 +562,56 @@ public final class Things
 	}
 
 	/**
+	 * Build upon the given object.
+	 *
 	 * @param t
-	 * @param consumer
-	 * @return
+	 *            the object to build
+	 * @param builder
+	 *            the function interface used to built up the object
+	 * @param <T>
+	 *            the type of object
+	 * @return T
 	 */
-	public static <T> T build(T t, Consumer<T> consumer)
+	public static <T> T build(T t, Consumer<T> builder)
 	{
-		consumer.accept(t);
+		builder.accept(verify(t));
 		return t;
+	}
+
+	/**
+	 * Get the first element in the given list
+	 *
+	 * @param list
+	 *            the List
+	 * @param <T>
+	 *            the type of object
+	 * @return T
+	 */
+	public static <T> T getFirst(final List<T> list)
+	{
+		if (isEmpty(list))
+		{
+			return null;
+		}
+		return list.get(0);
+	}
+
+	/**
+	 * Get the first element in the given array
+	 *
+	 * @param array
+	 *            the array
+	 * @param <T>
+	 *            the type of object
+	 * @return T
+	 */
+	public static <T> T getFirst(final T[] array)
+	{
+		if (isEmpty(array))
+		{
+			return null;
+		}
+		return array[0];
 	}
 
 }
