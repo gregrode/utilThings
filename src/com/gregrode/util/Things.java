@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -20,8 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * The <code>Things</code> class provides functionality to create and verify
- * some of your favorite Java objects
+ * The <code>Things</code> class provides functionality to create and verify some of your favorite Java objects
  *
  * @author Gregroy Dennis<br>
  *         Last updated: March 04, 2016<br>
@@ -168,8 +168,7 @@ public final class Things
 	}
 
 	/**
-	 * Check whether the given object is null or not. if null, an
-	 * {@link NullPointerException} is thrown.
+	 * Check whether the given object is null or not. if null, an {@link NullPointerException} is thrown.
 	 *
 	 * @param obj
 	 *            the object to check
@@ -183,8 +182,7 @@ public final class Things
 	}
 
 	/**
-	 * Check whether the given object is null or not. if null, an
-	 * {@link NullPointerException} is thrown.
+	 * Check whether the given object is null or not. if null, an {@link NullPointerException} is thrown.
 	 *
 	 * @param obj
 	 *            the object to check
@@ -200,9 +198,8 @@ public final class Things
 	}
 
 	/**
-	 * Check whether the given object is null or valid based on the given
-	 * predicate. if the predicate fails, an {@link NullPointerException} is
-	 * thrown.
+	 * Check whether the given object is null or valid based on the given predicate. if the predicate fails, an
+	 * {@link NullPointerException} is thrown.
 	 *
 	 * @param t
 	 *            the object to check
@@ -218,9 +215,8 @@ public final class Things
 	}
 
 	/**
-	 * Check whether the given object is null or valid based on the given
-	 * predicate. if the predicate fails, a {@link NullPointerException} is
-	 * thrown.
+	 * Check whether the given object is null or valid based on the given predicate. if the predicate fails, a
+	 * {@link NullPointerException} is thrown.
 	 *
 	 * @param t
 	 *            the object to check
@@ -238,8 +234,7 @@ public final class Things
 	}
 
 	/**
-	 * Check whether the given object is null or not. if null, an
-	 * {@link RuntimeException} is thrown.
+	 * Check whether the given object is null or not. if null, an {@link RuntimeException} is thrown.
 	 *
 	 * @param t
 	 *            the object to check
@@ -256,16 +251,12 @@ public final class Things
 
 	/**
 	 *
-	 * This method will throw an instance of {@link RuntimeException} if one of
-	 * the following cases occurs:
+	 * This method will throw an instance of {@link RuntimeException} if one of the following cases occurs:
 	 * <ol>
 	 * <li>The object is null</li>
-	 * <li>The object is an instance of a {@link Boolean} and the value is false
-	 * </li>
-	 * <li>The object is an instance of a {@link String} and the value is empty
-	 * </li>
-	 * <li>The object is an instance of a {@link Collection} and the value is
-	 * empty</li>
+	 * <li>The object is an instance of a {@link Boolean} and the value is false</li>
+	 * <li>The object is an instance of a {@link String} and the value is empty</li>
+	 * <li>The object is an instance of a {@link Collection} and the value is empty</li>
 	 * <li>The object is an instance of a {@link Map} the value is empty</li>
 	 * <li>The result from the predicate is false</li>
 	 * <li>The given exception is null</li>
@@ -324,7 +315,8 @@ public final class Things
 	@SafeVarargs
 	public static <T> T either(T... items)
 	{
-		return Stream.of(verify(items, new IllegalArgumentException("Items not specified."))).filter(t -> t != null).findFirst().get();
+		return Stream.of(verify(items, new IllegalArgumentException("Items not specified."))).filter(Objects::nonNull).findFirst()
+			.get();
 	}
 
 	/**
@@ -341,9 +333,8 @@ public final class Things
 	}
 
 	/**
-	 * Create an implementation of the {@link Map} interface using the given
-	 * {@link Supplier} object and populate the map with the given list of
-	 * {@link Entry}
+	 * Create an implementation of the {@link Map} interface using the given {@link Supplier} object and populate the map with the
+	 * given list of {@link Entry}
 	 *
 	 * @param mapSupplier
 	 *            The implementation of the {@link Map} interface to user
@@ -364,13 +355,11 @@ public final class Things
 	}
 
 	/**
-	 * Create an implementation of the {@link Map} interface using the given
-	 * {@link Supplier} object and populate the map with the given Array of T
-	 * objects
+	 * Create an implementation of the {@link Map} interface using the given {@link Supplier} object and populate the map with the
+	 * given Array of T objects
 	 *
 	 * @param mapSupplier
-	 *            The implementation of the {@link Map} interface that will be
-	 *            used
+	 *            The implementation of the {@link Map} interface that will be used
 	 * @param keyMapper
 	 *            The keyMapper indicates how the key will be resolved
 	 * @param valueMapper
@@ -389,15 +378,15 @@ public final class Things
 	 * @return {@link Map}
 	 */
 	@SafeVarargs
-	public static <K, V, M extends Map<K, V>, T> M toMap(Supplier<M> mapSupplier, Function<T, K> keyMapper, Function<T, V> valueMapper, T... items)
+	public static <K, V, M extends Map<K, V>, T> M toMap(Supplier<M> mapSupplier, Function<T, K> keyMapper,
+			Function<T, V> valueMapper, T... items)
 	{
 		return toMap(mapSupplier, keyMapper, valueMapper, Arrays.asList(verify(items)));
 	}
 
 	/**
-	 * Create a {@link HashMap} implementation of the {@link Map} interface
-	 * using the given the {@link Function} objects to determine the key/value
-	 * and populate the map with the given {@link Collection}.
+	 * Create a {@link HashMap} implementation of the {@link Map} interface using the given the {@link Function} objects to
+	 * determine the key/value and populate the map with the given {@link Collection}.
 	 *
 	 * @param keyMapper
 	 *            The keyMapper indicates how the key will be resolved
@@ -416,19 +405,18 @@ public final class Things
 	 *            The type of object for the Collection
 	 * @return {@link Map}
 	 */
-	public static <K, V, T, C extends Collection<T>> Map<K, V> toMap(Function<T, K> keyMapper, Function<T, V> valueMapper, C items)
+	public static <K, V, T, C extends Collection<T>> Map<K, V> toMap(Function<T, K> keyMapper, Function<T, V> valueMapper,
+			C items)
 	{
 		return toMap(HashMap::new, keyMapper, valueMapper, items);
 	}
 
 	/**
-	 * Create an implementation of the {@link Map} interface using the given
-	 * {@link Supplier} object, the {@link Function} objects to determine the
-	 * key/value and populate the map with the given {@link Collection}.
+	 * Create an implementation of the {@link Map} interface using the given {@link Supplier} object, the {@link Function} objects
+	 * to determine the key/value and populate the map with the given {@link Collection}.
 	 *
 	 * @param mapSupplier
-	 *            The implementation of the {@link Map} interface that will be
-	 *            used
+	 *            The implementation of the {@link Map} interface that will be used
 	 * @param keyMapper
 	 *            The keyMapper indicates how the key will be resolved
 	 * @param valueMapper
@@ -447,13 +435,13 @@ public final class Things
 	 *            The type of object for the Collection
 	 * @return {@link Map}
 	 */
-	public static <K, V, M extends Map<K, V>, T, C extends Collection<T>> M toMap(Supplier<M> mapSupplier, Function<T, K> keyMapper,
-	        Function<T, V> valueMapper, C items)
+	public static <K, V, M extends Map<K, V>, T, C extends Collection<T>> M toMap(Supplier<M> mapSupplier,
+			Function<T, K> keyMapper, Function<T, V> valueMapper, C items)
 	{
 		return verify(items, new IllegalArgumentException("Collection not specified.")).stream()
-		        .collect(Collectors.toMap(verify(keyMapper, new IllegalArgumentException("Key mapper not specified.")),
-		                verify(valueMapper, new IllegalArgumentException("Value mapper not specified.")), (m, m2) -> m,
-		                verify(mapSupplier, new IllegalArgumentException("Implementation of Map was not specified."))));
+			.collect(Collectors.toMap(verify(keyMapper, new IllegalArgumentException("Key mapper not specified.")),
+				verify(valueMapper, new IllegalArgumentException("Value mapper not specified.")), (m, m2) -> m,
+				verify(mapSupplier, new IllegalArgumentException("Implementation of Map was not specified."))));
 	}
 
 	/**
@@ -469,8 +457,8 @@ public final class Things
 	}
 
 	/**
-	 * Create an implementation of the {@link Map} interface using the given
-	 * {@link Supplier} object and populate the map with the given JSON
+	 * Create an implementation of the {@link Map} interface using the given {@link Supplier} object and populate the map with the
+	 * given JSON
 	 *
 	 * @param json
 	 *            the JSON String
@@ -496,19 +484,16 @@ public final class Things
 	}
 
 	/**
-	 * Create a {@link EnumMap} implementation of the {@link Map} interface
-	 * using the enum constants as the keys and the result of the
-	 * {@link Function#apply(Object)} as the value.
+	 * Create a {@link EnumMap} implementation of the {@link Map} interface using the enum constants as the keys and the result of
+	 * the {@link Function#apply(Object)} as the value.
 	 *
 	 * @param clazz
 	 *            the class of the enum
 	 * @param function
-	 *            the functional interface that indicates how the value will be
-	 *            resolved.
+	 *            the functional interface that indicates how the value will be resolved.
 	 *
 	 * @param <K>
-	 *            The type of object for the map key. Note, in this case the key
-	 *            will be constant within the enum.
+	 *            The type of object for the map key. Note, in this case the key will be constant within the enum.
 	 * @param <V>
 	 *            The type of object for the map value
 	 *
@@ -524,8 +509,7 @@ public final class Things
 	}
 
 	/**
-	 * Create a {@link Entry} object using the {@link AbstractMap.SimpleEntry}
-	 * implementation.
+	 * Create a {@link Entry} object using the {@link AbstractMap.SimpleEntry} implementation.
 	 *
 	 * @param key
 	 *            The key
@@ -564,20 +548,18 @@ public final class Things
 	}
 
 	/**
-	 * Pluck value out of the given {@link Collection} based on the given
-	 * {@link Function} object and return them as a Collection
+	 * Pluck value out of the given {@link Collection} based on the given {@link Function} object and return them as a Collection
 	 *
 	 * @param items
 	 *            the collection of itmes
 	 * @param function
-	 *            the functional interface that determine what value will be
-	 *            plucked.
+	 *            the functional interface that determine what value will be plucked.
 	 * @return {@link Collection}
 	 */
 	public static <T, R> Collection<R> pluck(Collection<T> items, Function<T, R> function)
 	{
-		return verify(items, new IllegalArgumentException("Collection not specified")).stream()
-		        .collect(Collectors.mapping(verify(function, new IllegalArgumentException("function lambda not specified")), Collectors.toList()));
+		return verify(items, new IllegalArgumentException("Collection not specified")).stream().collect(Collectors
+			.mapping(verify(function, new IllegalArgumentException("function lambda not specified")), Collectors.toList()));
 	}
 
 	/**
@@ -634,13 +616,20 @@ public final class Things
 	}
 
 	/**
+	 * Check if two objects are equals. Objects are considered equals if the one of following is true:
+	 * <ul>
+	 * <li>The are in the same memory location.</li>
+	 * <li>The objects equals method is true.
+	 * </ul>
+	 *
 	 * @param obj
+	 *            the first object
 	 * @param other
-	 * @return
+	 *            the other object
+	 * @return boolean
 	 */
 	public static <T> boolean equals(T obj, T other)
 	{
 		return (obj == null) ? false : (obj == other) || (obj.equals(other));
 	}
-
 }
