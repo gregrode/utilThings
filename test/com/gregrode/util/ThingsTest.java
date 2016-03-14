@@ -21,6 +21,25 @@ public final class ThingsTest
 		BLUE, RED, GREEN
 	}
 
+	@Test
+	public void isEmptyTest()
+	{
+		Assert.assertTrue(Things.isEmpty((String[]) null));
+		Assert.assertTrue(Things.isEmpty(new String[0]));
+		Assert.assertFalse(Things.isEmpty(new String[] { "test" }));
+
+		Assert.assertTrue(Things.isEmpty((List<?>) null));
+		Assert.assertTrue(Things.isEmpty(Arrays.asList(new String[0])));
+		Assert.assertFalse(Things.isEmpty(Arrays.asList(new String[] { "test" })));
+
+		final Map<String, String> map = new HashMap<>();
+
+		Assert.assertTrue(Things.isEmpty((Map<?, ?>) null));
+		Assert.assertTrue(Things.isEmpty(map));
+		map.put("greg", "is great");
+		Assert.assertFalse(Things.isEmpty(map));
+	}
+
 	@Test(expected = NullPointerException.class)
 	public void verifyTest()
 	{
@@ -47,8 +66,7 @@ public final class ThingsTest
 	@Test
 	public void pluckTest()
 	{
-		final List<Map.Entry<String, String>> entries = Arrays.asList(Things.pair("firstname", "greg"),
-			Things.pair("lastName", "Dennis"));
+		final List<Map.Entry<String, String>> entries = Arrays.asList(Things.pair("firstname", "greg"), Things.pair("lastName", "Dennis"));
 		final Collection<String> keys = Things.pluck(entries, Map.Entry::getKey);
 		Assert.assertNotNull(keys);
 	}
@@ -64,8 +82,7 @@ public final class ThingsTest
 	public void toMapTest()
 	{
 
-		final Map<String, String> map = Things.toMap(LinkedHashMap::new, Things.pair("firstName", "greg"),
-			Things.pair("lastName", "Dennis"));
+		final Map<String, String> map = Things.toMap(LinkedHashMap::new, Things.pair("firstName", "greg"), Things.pair("lastName", "Dennis"));
 		Assert.assertTrue(map.containsKey("firstName"));
 		Assert.assertEquals("greg", map.get("firstName"));
 
@@ -73,8 +90,7 @@ public final class ThingsTest
 		Assert.assertTrue(map2.containsKey("home"));
 		Assert.assertEquals("house", map2.get("home"));
 
-		final Map<Integer, String> map3 = Things.toMap(HashMap::new,
-			"{'1': 'apple', '4' : 'zebra', '7' : 'queens', '100' : 'baseball'}");
+		final Map<Integer, String> map3 = Things.toMap(HashMap::new, "{'1': 'apple', '4' : 'zebra', '7' : 'queens', '100' : 'baseball'}");
 		Assert.assertEquals("apple", map3.get("1"));
 
 		final Map<Color, Integer> map4 = Things.toMap(Color.class, Color::hashCode);
