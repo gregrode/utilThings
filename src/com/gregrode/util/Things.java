@@ -56,6 +56,49 @@ public final class Things
 	 *            the array
 	 * @return boolean
 	 */
+	@SafeVarargs
+	public static <T> boolean isEmpty(Predicate<T> predicate, final T... array)
+	{
+		if ((array == null) || (array.length == 0))
+		{
+			return true;
+		}
+		return Arrays.stream(array).anyMatch(predicate);
+	}
+
+	/**
+	 * @param predicate
+	 * @param array
+	 * @return
+	 */
+	@SafeVarargs
+	public static <T> boolean isNotEmpty(final T... array)
+	{
+		return !isEmpty(array);
+	}
+
+	/**
+	 * @param predicate
+	 * @param array
+	 * @return
+	 */
+	@SafeVarargs
+	public static <T> boolean isNotEmpty(Predicate<T> predicate, final T... array)
+	{
+		if (isEmpty(array))
+		{
+			return false;
+		}
+		return Arrays.stream(array).allMatch(predicate);
+	}
+
+	/**
+	 * Checks if the given array object is empty
+	 *
+	 * @param args
+	 *            the array
+	 * @return boolean
+	 */
 	public static boolean isEmpty(final boolean... array)
 	{
 		return ((array == null) || (array.length == 0));
@@ -315,8 +358,24 @@ public final class Things
 	@SafeVarargs
 	public static <T> T either(T... items)
 	{
-		return Stream.of(verify(items, new IllegalArgumentException("Items not specified."))).filter(Objects::nonNull).findFirst()
-			.get();
+		return either(Objects::nonNull, items);
+	}
+
+	/**
+	 * Get the first item that the matches the given {@link Predicate} within the given varargs
+	 *
+	 * @param predicate
+	 *            the predicate determines which item in the list will be returned
+	 * @param items
+	 *            the list of items
+	 * @param <T>
+	 *            the type of object
+	 * @return T
+	 */
+	@SafeVarargs
+	public static <T> T either(Predicate<T> predicate, T... items)
+	{
+		return Stream.of(verify(items, new IllegalArgumentException("Items not specified."))).filter(predicate).findFirst().get();
 	}
 
 	/**
@@ -575,7 +634,7 @@ public final class Things
 	 */
 	public static <T> T build(T t, Consumer<T> builder)
 	{
-		builder.accept(verify(t));
+		builder.accept(Objects.requireNonNull(t, "Cannot build object when it is null"));
 		return t;
 	}
 
