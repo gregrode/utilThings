@@ -221,7 +221,7 @@ public final class Things
 	 */
 	public static <T> T verify(T t)
 	{
-		return verify(t, new NullPointerException());
+		return Objects.requireNonNull(t);
 	}
 
 	/**
@@ -237,7 +237,7 @@ public final class Things
 	 */
 	public static <T> T verify(T t, String message)
 	{
-		return verify(t, new NullPointerException(message));
+		return Objects.requireNonNull(t, message);
 	}
 
 	/**
@@ -296,13 +296,13 @@ public final class Things
 	 *
 	 * This method will throw an instance of {@link RuntimeException} if one of the following cases occurs:
 	 * <ol>
-	 * <li>The object is null</li>
-	 * <li>The object is an instance of a {@link Boolean} and the value is false</li>
+	 * <li>The object is {@code null}</li>
+	 * <li>The exception is {@code null}</li>
+	 * <li>The predicate is {@code null} or the result of the predicate is {@code false}.</li>
+	 * <li>The object is an instance of a {@link Boolean} and the value is {@code false}</li>
 	 * <li>The object is an instance of a {@link String} and the value is empty</li>
 	 * <li>The object is an instance of a {@link Collection} and the value is empty</li>
 	 * <li>The object is an instance of a {@link Map} the value is empty</li>
-	 * <li>The result from the predicate is false</li>
-	 * <li>The given exception is null</li>
 	 * </ol>
 	 *
 	 *
@@ -318,30 +318,17 @@ public final class Things
 	 */
 	public static <T> T verify(T t, RuntimeException exception, Predicate<T> predicate)
 	{
-		boolean bool = (t != null);
-		if (bool && (t instanceof Boolean))
-		{
-			bool = ((Boolean) t).booleanValue();
-		}
+		Objects.requireNonNull(t, "Object was not specified.");
+		Objects.requireNonNull(exception, "Exception was not specified.");
+		Objects.requireNonNull(predicate, "Predicate was not specified.");
 
-		if (bool && (t instanceof String))
-		{
-			bool = !((String) t).isEmpty();
-		}
+		if (((t instanceof Boolean) && !((Boolean) t).booleanValue()) || ((t instanceof String) && ((String) t).isEmpty())
+				|| ((t instanceof Collection) && ((Collection<?>) t).isEmpty())
+				|| ((t instanceof Map) && ((Map<?, ?>) t).isEmpty()) || ((t instanceof Object[]) && isEmpty(t))
+				|| (!predicate.test(t)))
 
-		if (bool && (t instanceof Collection))
 		{
-			bool = !((Collection<?>) t).isEmpty();
-		}
-
-		if (bool && (t instanceof Map))
-		{
-			bool = !((Map<?, ?>) t).isEmpty();
-		}
-
-		if (!bool || ((predicate != null) && !predicate.test(t)))
-		{
-			throw verify(exception, "Exception was not specified.");
+			throw exception;
 		}
 		return t;
 	}
@@ -375,7 +362,10 @@ public final class Things
 	@SafeVarargs
 	public static <T> T either(Predicate<T> predicate, T... items)
 	{
-		return Stream.of(verify(items, new IllegalArgumentException("Items not specified."))).filter(predicate).findFirst().get();
+		verify(items, new IllegalArgumentException("Items not specified."));
+		verify(predicate, new IllegalArgumentException("Predicate not specified."));
+
+		return Stream.of(items).filter(predicate).findFirst().get();
 	}
 
 	/**
@@ -497,10 +487,12 @@ public final class Things
 	public static <K, V, M extends Map<K, V>, T, C extends Collection<T>> M toMap(Supplier<M> mapSupplier,
 			Function<T, K> keyMapper, Function<T, V> valueMapper, C items)
 	{
-		return verify(items, new IllegalArgumentException("Collection not specified.")).stream()
-			.collect(Collectors.toMap(verify(keyMapper, new IllegalArgumentException("Key mapper not specified.")),
-				verify(valueMapper, new IllegalArgumentException("Value mapper not specified.")), (m, m2) -> m,
-				verify(mapSupplier, new IllegalArgumentException("Implementation of Map was not specified."))));
+		verify(items, new IllegalArgumentException("Collection not specified."));
+		verify(keyMapper, new IllegalArgumentException("Key mapper not specified."));
+		verify(valueMapper, new IllegalArgumentException("Value mapper not specified."));
+		verify(mapSupplier, new IllegalArgumentException("Implementation of Map was not specified."));
+
+		return items.stream().collect(Collectors.toMap(keyMapper, valueMapper, (m, m2) -> m, mapSupplier));
 	}
 
 	/**
@@ -530,10 +522,11 @@ public final class Things
 	@SuppressWarnings("unchecked")
 	public static <K, V, M extends Map<K, V>> Map<K, V> toMap(Supplier<M> mapSupplier, String json)
 	{
+		verify(json, "Cannot transform null string in Map.");
 		try
 		{
 			final ObjectMapper mapper = new ObjectMapper();
-			final JsonNode jsonNode = mapper.readTree(verify(json, "Cannot transform null string in Map.").replaceAll("'", "\""));
+			final JsonNode jsonNode = mapper.readTree(json.replaceAll("'", "\""));
 			return mapper.treeToValue(jsonNode, verify(mapSupplier).get().getClass());
 		}
 		catch (final IOException e)
@@ -560,9 +553,12 @@ public final class Things
 	 */
 	public static <K extends Enum<K>, V> Map<K, V> toMap(Class<K> clazz, Function<K, V> function)
 	{
-		final EnumMap<K, V> map = new EnumMap<K, V>(verify(clazz, "Enum class not specified."));
+		verify(clazz, "Enum class not specified.");
+		verify(function, "Function lambda not specified.");
+
+		final EnumMap<K, V> map = new EnumMap<K, V>(clazz);
 		Arrays.stream(clazz.getEnumConstants()).forEach(v -> {
-			map.put(v, verify(function, "Function lambda not specified.").apply(v));
+			map.put(v, function.apply(v));
 		});
 		return map;
 	}
@@ -595,10 +591,11 @@ public final class Things
 	 */
 	public static String toJSON(Object obj)
 	{
+		verify(obj, "Cannot transform null object in JSON.");
 		try
 		{
 			final ObjectMapper mapper = new ObjectMapper();
-			return mapper.writeValueAsString(verify(obj, "Cannot transform null object in JSON."));
+			return mapper.writeValueAsString(obj);
 		}
 		catch (final IOException e)
 		{
@@ -617,8 +614,10 @@ public final class Things
 	 */
 	public static <T, R> Collection<R> pluck(Collection<T> items, Function<T, R> function)
 	{
-		return verify(items, new IllegalArgumentException("Collection not specified")).stream().collect(Collectors
-			.mapping(verify(function, new IllegalArgumentException("function lambda not specified")), Collectors.toList()));
+		verify(items, new IllegalArgumentException("Collection not specified"));
+		verify(function, new IllegalArgumentException("function lambda not specified"));
+
+		return items.stream().collect(Collectors.mapping(function, Collectors.toList()));
 	}
 
 	/**
@@ -691,4 +690,23 @@ public final class Things
 	{
 		return (obj == null) ? false : (obj == other) || (obj.equals(other));
 	}
+
+	/**
+	 * Close the gives list of objects
+	 *
+	 * @param closeables
+	 *            the objects to close.
+	 * @throws Exception
+	 */
+	public static void close(AutoCloseable... closeables) throws Exception
+	{
+		for (final AutoCloseable obj : closeables)
+		{
+			if (obj != null)
+			{
+				obj.close();
+			}
+		}
+	}
+
 }
