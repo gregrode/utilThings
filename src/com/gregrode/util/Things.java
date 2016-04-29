@@ -674,24 +674,6 @@ public final class Things
 	}
 
 	/**
-	 * Check if two objects are equals. Objects are considered equals if the one of following is true:
-	 * <ul>
-	 * <li>The are in the same memory location.</li>
-	 * <li>The objects equals method is true.
-	 * </ul>
-	 *
-	 * @param obj
-	 *            the first object
-	 * @param other
-	 *            the other object
-	 * @return boolean
-	 */
-	public static <T> boolean equals(T obj, T other)
-	{
-		return (obj == null) ? false : (obj == other) || (obj.equals(other));
-	}
-
-	/**
 	 * Close the gives list of objects
 	 *
 	 * @param closeables
