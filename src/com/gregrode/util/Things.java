@@ -326,7 +326,6 @@ public final class Things
 				|| ((t instanceof Collection) && ((Collection<?>) t).isEmpty())
 				|| ((t instanceof Map) && ((Map<?, ?>) t).isEmpty()) || ((t instanceof Object[]) && isEmpty(t))
 				|| (!predicate.test(t)))
-
 		{
 			throw exception;
 		}
@@ -343,9 +342,9 @@ public final class Things
 	 * @return T
 	 */
 	@SafeVarargs
-	public static <T> T either(T... items)
+	public static <T> T nonNull(T... items)
 	{
-		return either(Objects::nonNull, items);
+		return nonNull(Objects::nonNull, items);
 	}
 
 	/**
@@ -360,12 +359,30 @@ public final class Things
 	 * @return T
 	 */
 	@SafeVarargs
-	public static <T> T either(Predicate<T> predicate, T... items)
+	public static <T> T nonNull(Predicate<T> predicate, T... items)
 	{
 		verify(items, new IllegalArgumentException("Items not specified."));
 		verify(predicate, new IllegalArgumentException("Predicate not specified."));
 
 		return Stream.of(items).filter(predicate).findFirst().get();
+	}
+
+	/**
+	 * Check if the given item is not null. If {@code t} is null, then check the {@link Supplier} object.
+	 * 
+	 * @param t
+	 *            the item
+	 * @param <T>
+	 *            the type of object
+	 * @return T
+	 */
+	public static <T> T nonNull(T t, Supplier<T> supplier)
+	{
+		if (t == null)
+		{
+			return verify(supplier.get(), "Supplier is null");
+		}
+		return t;
 	}
 
 	/**
@@ -376,7 +393,7 @@ public final class Things
 	 * @return first non zero integer
 	 **/
 	@SafeVarargs
-	public static int either(int... things)
+	public static int nonZero(int... things)
 	{
 		return Arrays.stream(things).filter(t -> t > 0).findFirst().getAsInt();
 	}
