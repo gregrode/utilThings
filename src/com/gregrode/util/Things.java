@@ -594,7 +594,7 @@ public final class Things
 	 *            The type of object for the value.
 	 * @return {@link Entry}
 	 */
-	public static <K, V> Entry<K, V> pair(K key, V value)
+	public static <K, V> Entry<K, V> toEntry(K key, V value)
 	{
 		return new AbstractMap.SimpleEntry<>(key, value);
 	}

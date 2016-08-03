@@ -18,7 +18,9 @@ public final class ThingsTest
 {
 	enum Color
 	{
-		BLUE, RED, GREEN
+		BLUE,
+		RED,
+		GREEN
 	}
 
 	@Test
@@ -47,7 +49,7 @@ public final class ThingsTest
 		Assert.assertNotNull(Things.verify("test", s -> !s.isEmpty()));
 		Assert.assertNotNull(Things.verify("test", "null", s -> !s.isEmpty()));
 		Assert.assertTrue(Things.verify(true));
-		Assert.assertNotNull(Things.verify(Things.toMap(LinkedHashMap::new, Things.pair("firstName", "greg"))));
+		Assert.assertNotNull(Things.verify(Things.toMap(LinkedHashMap::new, Things.toEntry("firstName", "greg"))));
 		Things.verify("test", (str) -> str.length() == 5);
 	}
 
@@ -66,7 +68,8 @@ public final class ThingsTest
 	@Test
 	public void pluckTest()
 	{
-		final List<Map.Entry<String, String>> entries = Arrays.asList(Things.pair("firstname", "greg"), Things.pair("lastName", "Dennis"));
+		final List<Map.Entry<String, String>> entries = Arrays.asList(Things.toEntry("firstname", "greg"),
+			Things.toEntry("lastName", "Dennis"));
 		final Collection<String> keys = Things.pluck(entries, Map.Entry::getKey);
 		Assert.assertNotNull(keys);
 	}
@@ -82,7 +85,8 @@ public final class ThingsTest
 	public void toMapTest()
 	{
 
-		final Map<String, String> map = Things.toMap(LinkedHashMap::new, Things.pair("firstName", "greg"), Things.pair("lastName", "Dennis"));
+		final Map<String, String> map = Things.toMap(LinkedHashMap::new, Things.toEntry("firstName", "greg"),
+			Things.toEntry("lastName", "Dennis"));
 		Assert.assertTrue(map.containsKey("firstName"));
 		Assert.assertEquals("greg", map.get("firstName"));
 
@@ -90,7 +94,8 @@ public final class ThingsTest
 		Assert.assertTrue(map2.containsKey("home"));
 		Assert.assertEquals("house", map2.get("home"));
 
-		final Map<Integer, String> map3 = Things.toMap(HashMap::new, "{'1': 'apple', '4' : 'zebra', '7' : 'queens', '100' : 'baseball'}");
+		final Map<Integer, String> map3 = Things.toMap(HashMap::new,
+			"{'1': 'apple', '4' : 'zebra', '7' : 'queens', '100' : 'baseball'}");
 		Assert.assertEquals("apple", map3.get("1"));
 
 		final Map<Color, Integer> map4 = Things.toMap(Color.class, Color::hashCode);
