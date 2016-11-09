@@ -51,18 +51,7 @@ public final class ThingsTest
 		Assert.assertTrue(Things.verify(true));
 		Assert.assertNotNull(Things.verify(Things.toMap(LinkedHashMap::new, Things.toEntry("firstName", "greg"))));
 		Things.verify("test", (str) -> str.length() == 5);
-	}
-
-	@Test(expected = IllegalArgumentException.class)
-	public void verifyIllegalArgumentExceptionTest()
-	{
-		Things.verify(null, new IllegalArgumentException());
-	}
-
-	@Test(expected = NullPointerException.class)
-	public void verifyListTest()
-	{
-		Things.verify(new ArrayList<String>(0), "null");
+		Things.verify(null, "This is null");
 	}
 
 	@Test
@@ -108,6 +97,17 @@ public final class ThingsTest
 		final List<String> list = new ArrayList<>();
 		list.add("Greg");
 		list.add("Dennis");
+
+	}
+
+	@Test(expected = NullPointerException.class)
+	public void nonNullTest()
+	{
+		Assert.assertNotNull((Things.nonNull(null, "")));
+		Assert.assertNotNull((Things.nonNull("", null)));
+		Assert.assertNotNull((Things.nonNull("", () -> null)));
+		Assert.assertNotNull((Things.nonNull(null, () -> "")));
+		Assert.assertNull((Things.nonNull(null, null)));
 
 	}
 }

@@ -15,7 +15,6 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -341,30 +340,9 @@ public final class Things
 	 *            the type of object
 	 * @return T
 	 */
-	@SafeVarargs
-	public static <T> T nonNull(T... items)
+	public static <T> T nonNull(T t, T t2)
 	{
-		return nonNull(Objects::nonNull, items);
-	}
-
-	/**
-	 * Get the first item that the matches the given {@link Predicate} within the given varargs
-	 *
-	 * @param predicate
-	 *            the predicate determines which item in the list will be returned
-	 * @param items
-	 *            the list of items
-	 * @param <T>
-	 *            the type of object
-	 * @return T
-	 */
-	@SafeVarargs
-	public static <T> T nonNull(Predicate<T> predicate, T... items)
-	{
-		verify(items, new IllegalArgumentException("Items not specified."));
-		verify(predicate, new IllegalArgumentException("Predicate not specified."));
-
-		return Stream.of(items).filter(predicate).findFirst().get();
+		return t != null ? t : t2;
 	}
 
 	/**
@@ -573,7 +551,7 @@ public final class Things
 		verify(clazz, "Enum class not specified.");
 		verify(function, "Function lambda not specified.");
 
-		final EnumMap<K, V> map = new EnumMap<K, V>(clazz);
+		final EnumMap<K, V> map = new EnumMap<>(clazz);
 		Arrays.stream(clazz.getEnumConstants()).forEach(v -> {
 			map.put(v, function.apply(v));
 		});
