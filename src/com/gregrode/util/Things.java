@@ -332,26 +332,27 @@ public final class Things
 	}
 
 	/**
-	 * Get the first non null value with in the given varargs
+	 * Check if the first parameter is not null, if so, {@code first} is returned. Otherwise, {@code def} is returned
 	 *
-	 * @param items
-	 *            the list of items
-	 * @param <T>
-	 *            the type of object
+	 * @param first
+	 *            the object to test
+	 * @param def
+	 *            the default value to return if the first parameter is null
 	 * @return T
 	 */
-	public static <T> T nonNull(T t, T t2)
+	public static <T> T nonNull(T first, T def)
 	{
-		return t != null ? t : t2;
+		return first != null ? first : def;
 	}
 
 	/**
 	 * Check if the given item is not null. If {@code t} is null, then check the {@link Supplier} object.
 	 * 
+	 * 
 	 * @param t
-	 *            the item
-	 * @param <T>
-	 *            the type of object
+	 *            the object to test
+	 * @param supplier
+	 *            the {@link Supplier} object which contained the default value if {@code t} is null.
 	 * @return T
 	 */
 	public static <T> T nonNull(T t, Supplier<T> supplier)
