@@ -10,11 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.concurrent.Callable;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -347,8 +349,8 @@ public final class Things
 
 	/**
 	 * Check if the given item is not null. If {@code t} is null, then check the {@link Supplier} object.
-	 * 
-	 * 
+	 *
+	 *
 	 * @param t
 	 *            the object to test
 	 * @param supplier
@@ -357,11 +359,7 @@ public final class Things
 	 */
 	public static <T> T nonNull(T t, Supplier<T> supplier)
 	{
-		if (t == null)
-		{
-			return verify(supplier.get(), "Supplier is null");
-		}
-		return t;
+		return (t == null) ? verify(supplier.get(), "Supplier is null") : t;
 	}
 
 	/**
@@ -644,11 +642,7 @@ public final class Things
 	 */
 	public static <T> T getFirst(final List<T> list)
 	{
-		if (isEmpty(list))
-		{
-			return null;
-		}
-		return list.get(0);
+		return isEmpty(list) ? null : list.get(0);
 	}
 
 	/**
@@ -662,11 +656,49 @@ public final class Things
 	 */
 	public static <T> T getFirst(final T[] array)
 	{
-		if (isEmpty(array))
+		return isEmpty(array) ? null : array[0];
+	}
+
+	/**
+	 * @param callable
+	 * @return
+	 */
+	public static <T> Supplier<T> uncheck(Callable<T> callable)
+	{
+		return () -> {
+			try
+			{
+				return callable.call();
+			}
+			catch (final RuntimeException e)
+			{
+				throw e;
+			}
+			catch (final Exception e)
+			{
+				throw new RuntimeException(e);
+			}
+		};
+	}
+
+	/**
+	 * @param callable
+	 * @return
+	 */
+	public static void uncheck(VoidFunction func)
+	{
+		try
 		{
-			return null;
+			func.call();
 		}
-		return array[0];
+		catch (final RuntimeException e)
+		{
+			throw e;
+		}
+		catch (final Exception e)
+		{
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -678,13 +710,9 @@ public final class Things
 	 */
 	public static void close(AutoCloseable... closeables) throws Exception
 	{
-		for (final AutoCloseable obj : closeables)
-		{
-			if (obj != null)
-			{
-				obj.close();
-			}
-		}
+		Stream.of(closeables).filter(Objects::nonNull).forEach(a -> uncheck(() -> {
+			a.close();
+		}));
 	}
 
 }
