@@ -60,11 +60,7 @@ public final class Things
 	@SafeVarargs
 	public static <T> boolean isEmpty(Predicate<T> predicate, final T... array)
 	{
-		if ((array == null) || (array.length == 0))
-		{
-			return true;
-		}
-		return Arrays.stream(array).anyMatch(predicate);
+		return isEmpty(array) ? true : Arrays.stream(array).anyMatch(predicate);
 	}
 
 	/**
@@ -86,11 +82,8 @@ public final class Things
 	@SafeVarargs
 	public static <T> boolean isNotEmpty(Predicate<T> predicate, final T... array)
 	{
-		if (isEmpty(array))
-		{
-			return false;
-		}
-		return Arrays.stream(array).allMatch(predicate);
+		return (isEmpty(array)) ? false : Arrays.stream(array).allMatch(predicate);
+
 	}
 
 	/**
@@ -551,9 +544,7 @@ public final class Things
 		verify(function, "Function lambda not specified.");
 
 		final EnumMap<K, V> map = new EnumMap<>(clazz);
-		Arrays.stream(clazz.getEnumConstants()).forEach(v -> {
-			map.put(v, function.apply(v));
-		});
+		Arrays.stream(clazz.getEnumConstants()).forEach(v -> map.put(v, function.apply(v)));
 		return map;
 	}
 
@@ -710,9 +701,7 @@ public final class Things
 	 */
 	public static void close(AutoCloseable... closeables) throws Exception
 	{
-		Stream.of(closeables).filter(Objects::nonNull).forEach(a -> uncheck(() -> {
-			a.close();
-		}));
+		Stream.of(closeables).filter(Objects::nonNull).forEach(a -> uncheck(() -> a.close()));
 	}
 
 }
