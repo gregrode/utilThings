@@ -5,6 +5,7 @@ package com.gregrode.util;
  *         &copy; Gregroy Dennis 2016
  *
  */
+@FunctionalInterface
 public interface VoidFunction
 {
 	/**
