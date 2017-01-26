@@ -6,7 +6,7 @@ package com.gregrode.util;
  *
  */
 @FunctionalInterface
-public interface VoidFunction
+public interface Voidable
 {
 	/**
 	 *

@@ -673,14 +673,13 @@ public final class Things
 	}
 
 	/**
-	 * @param callable
-	 * @return
+	 * @param voidable
 	 */
-	public static void uncheck(VoidFunction func)
+	public static void uncheck(Voidable voidable)
 	{
 		try
 		{
-			func.call();
+			voidable.call();
 		}
 		catch (final RuntimeException e)
 		{
@@ -701,7 +700,7 @@ public final class Things
 	 */
 	public static void close(AutoCloseable... closeables) throws Exception
 	{
-		Stream.of(closeables).filter(Objects::nonNull).forEach(a -> uncheck(() -> a.close()));
+		Stream.of(closeables).filter(Objects::nonNull).forEach(a -> uncheck(a::close));
 	}
 
 }
